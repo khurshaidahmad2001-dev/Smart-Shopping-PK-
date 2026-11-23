@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Shopping PK - آن لائن شاپنگ اسٹور</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --daraz-orange: #f85606;
+            --daraz-dark: #d04300;
+            --bg-light: #f4f4f6;
+            --text-dark: #212121;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', 'Noto Nastaliq Urdu', sans-serif;
+        }
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            padding-bottom: 40px;
+        }
+        /* Header */
+        header {
+            background-color: var(--daraz-orange);
+            color: white;
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            direction: ltr;
+        }
+        .cod-badge {
+            background: #fff;
+            color: var(--daraz-orange);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .search-bar {
+            width: 100%;
+            padding: 9px 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        /* Sale Banner */
+        .banner {
+            background: linear-gradient(135deg, #ff6a00, #ee0979);
+            color: white;
+            text-align: center;
+            padding: 18px 15px;
+            margin: 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(248, 86, 6, 0.25);
+        }
+        .banner h2 {
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+        .banner p {
+            font-size: 13px;
+            opacity: 0.95;
+        }
+
+        /* Section Title */
+        .section-title {
+            padding: 8px 16px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Product Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 0 12px;
+        }
+        @media (min-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(4, 1fr);
+                max-width: 1100px;
+                margin: 0 auto;
+            }
+        }
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s;
+        }
+        .product-card:hover {
+            transform: translateY(-3px);
+        }
+        .img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 175px;
+            background: #fafafa;
+        }
+        .img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .discount-tag {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: var(--daraz-orange);
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 2px 7px;
+            border-radius: 4px;
+            direction: ltr;
+        }
+        .product-info {
+            padding: 10px;
+        }
+        .product-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            line-height: 1.5;
+            color: #222;
+        }
+        .price-box {
+            margin-bottom: 4px;
+        }
+        .current-price {
+            color: var(--daraz-orange);
+            font-size: 16px;
+            font-weight: 700;
+            direction: ltr;
+            display: inline-block;
+        }
+        .old-price {
+            color: #9e9e9e;
+            font-size: 12px;
+            text-decoration: line-through;
+            margin-right: 6px;
+            direction: ltr;
+            display: inline-block;
+        }
+        .rating {
+            font-size: 12px;
+            color: #faca51;
+            margin-bottom: 10px;
+        }
+        .rating span {
+            color: #757575;
+        }
+        .order-btn {
+            width: 100%;
+            background: var(--daraz-orange);
+            color: white;
+            border: none;
+            padding: 9px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .order-btn:hover {
+            background: var(--daraz-dark);
+        }
+
+        /* Order Modal (Popup Form) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            animation: slideUp 0.25s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .close-btn {
+            position: absolute;
+            top: 12px;
+            left: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        .modal h3 {
+            color: var(--daraz-orange);
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .selected-item-box {
+            background: #fff5f0;
+            border: 1px dashed var(--daraz-orange);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 9px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .whatsapp-submit {
+            width: 100%;
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+        .whatsapp-submit:hover {
+            background: #1ebe5d;
+        }
+        footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 13px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-top">
+            <div class="logo">Smart Shopping PK</div>
+            <div class="cod-badge">کیش آن ڈیلیوری دستیاب ہے</div>
+        </div>
+        <input type="text" id="searchInput" class="search-bar" placeholder="پروڈکٹ تلاش کریں..." onkeyup="searchProducts()">
+    </header>
+
+    <!-- Banner -->
+    <div class="banner">
+        <h2>میگا سیل آفر! 40% تک ڈسکاؤنٹ</h2>
+        <p>پورے پاکستان میں تیز ترین ڈیلیوری — پہلے پارسل لیں، پھر پیسے دیں</p>
+    </div>
+
+    <!-- Products Section -->
+    <div class="section-title">
+        <span>خاص آپ کے لیے (Just For You)</span>
+    </div>
+
+    <div class="products-grid" id="productsGrid">
+
+        <!-- Product 1 -->
+        <div class="product-card" data-name="Tan Marble Tote Bag لیڈیز بیگ">
+            <div class="img-wrapper">
+                <span class="discount-tag">-35%</span>
+                <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=500&q=80" alt="Tan Marble Tote Bag">
+            </div>
+            <div class="product-info">
+                <div class="product-title">پریمیم ٹین ماربل ٹوٹ بیگ (Tan Marble Tote Bag)</div>
+                <div class="price-box">
+                    <span class="current-price">Rs. 1,499</span>
+                    <span class="old-price">Rs. 2,300</span>
+                </div>
+                <div class="rating">★★★★★ <span>(142)</span></div>
+                <button class="order-btn" onclick="openOrderModal('پریمیم ٹین ماربل ٹوٹ بیگ', 1499)">ابھی آرڈر کریں</button>
+            </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="product-card" data-name="Ultra Smart Watch اسمارٹ واچ">
+            <div class="img-wrapper">
+                <span class="discount-tag">-40%</span>
+                <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=500&q=80" alt="Smart Watch">
+            </div>
+            <div class="product-info">
+                <div class="product-title">الٹرا اسمارٹ واچ کالنگ فیچر کے ساتھ</div>
+                <div class="price-box">
+                    <span class="current-price">Rs. 2,199</span>
+                    <span class="old-price">Rs. 3,600</span>
+                </div>
+                <div class="rating">★★★★★ <span>(98)</span></div>
+                <button class="order-btn" onclick="openOrderModal('الٹرا اسمارٹ واچ', 2199)">ابھی آرڈر کریں</button>
+            </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="product-card" data-name="Wireless Earbuds ایئربڈز">
+            <div class="img-wrapper">
+                <span class="discount-tag">-30%</span>
+                <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=500&q=80" alt="Wireless Earbuds">
+            </div>
+            <div class="product-info">
+                <div class="product-title">وائرلیس بلوٹوتھ ایئربڈز (Hi-Fi ساؤنڈ)</div>
+                <div class="price-box">
+                    <span class="current-price">Rs. 1,299</span>
+                    <span class="old-price">Rs. 1,850</span>
+                </div>
+                <div class="rating">★★★★☆ <span>(215)</span></div>
+                <button class="order-btn" onclick="openOrderModal('وائرلیس بلوٹوتھ ایئربڈز', 1299)">ابھی آرڈر کریں</button>
+            </div>
+        </div>
+
+        <!-- Product 4 -->
+        <div class="product-card" data-name="Mens Leather Wallet بٹوہ">
+            <div class="img-wrapper">
+                <span class="discount-tag">-25%</span>
+                <img src="https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=500&q=80" alt="Leather Wallet">
+            </div>
+            <div class="product-info">
+                <div class="product-title">مردانہ خالص لیدر والٹ (Classic Wallet)</div>
+                <div class="price-box">
+                    <span class="current-price">Rs. 899</span>
+                    <span class="old-price">Rs. 1,200</span>
+                </div>
+                <div class="rating">★★★★★ <span>(76)</span></div>
+                <button class="order-btn" onclick="openOrderModal('مردانہ لیدر والٹ', 899)">ابھی آرڈر کریں</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Order Form Popup -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3>آرڈر بک کریں (Cash on Delivery)</h3>
+            <div class="selected-item-box" id="selectedProductDisplay"></div>
+
+            <form onsubmit="sendToWhatsApp(event)">
+                <div class="form-group">
+                    <label>آپ کا پورا نام *</label>
+                    <input type="text" id="custName" required placeholder="اپنا نام لکھیں">
+                </div>
+                <div class="form-group">
+                    <label>موبائل / واٹس ایپ نمبر *</label>
+                    <input type="tel" id="custPhone" required placeholder="03XXXXXXXXX">
+                </div>
+                <div class="form-group">
+                    <label>شہر کا نام *</label>
+                    <input type="text" id="custCity" required placeholder="مثلاً: لاہور، کراچی، اسلام آباد">
+                </div>
+                <div class="form-group">
+                    <label>تعداد (Quantity)</label>
+                    <select id="custQty" onchange="updateTotal()">
+                        <option value="1">1 عدد</option>
+                        <option value="2">2 عدد</option>
+                        <option value="3">3 عدد</option>
+                        <option value="4">4 عدد</option>
+                        <option value="5">5 عدد</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>مکمل پتہ (گھر نمبر، گلی، مشہور جگہ) *</label>
+                    <textarea id="custAddress" rows="2" required placeholder="اپنا مکمل ایڈریس لکھیں جہاں پارسل بھیجنا ہے"></textarea>
+                </div>
+                <button type="submit" class="whatsapp-submit">واٹس ایپ پر آرڈر کنفرم کریں ✅</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Smart Shopping PK | رابطہ: 0343-3335740</p>
+    </footer>
+
+    <script>
+        // آپ کا واٹس ایپ نمبر
+        const storeWhatsApp = "923433335740";
+        const deliveryCharges = 200; // ڈیلیوری چارجز
+        let selectedProduct = "";
+        let unitPrice = 0;
+
+        function openOrderModal(productName, price) {
+            selectedProduct = productName;
+            unitPrice = price;
+            document.getElementById("custQty").value = "1";
+            updateTotal();
+            document.getElementById("orderModal").style.display = "flex";
+        }
+
+        function updateTotal() {
+            const qty = parseInt(document.getElementById("custQty").value);
+            const total = (unitPrice * qty) + deliveryCharges;
+            document.getElementById("selectedProductDisplay").innerHTML = 
+                `<strong>پروڈکٹ:</strong> ${selectedProduct}<br>` +
+                `<strong>قیمت:</strong> Rs. ${unitPrice} × ${qty} + Rs. ${deliveryCharges} (ڈیلیوری)<br>` +
+                `<strong>کل بل (COD):</strong> <span style="color:#f85606; font-weight:bold;">Rs. ${total}</span>`;
+        }
+
+        function closeModal() {
+            document.getElementById("orderModal").style.display = "none";
+        }
+
+        function sendToWhatsApp(e) {
+            e.preventDefault();
+            const name = document.getElementById("custName").value;
+            const phone = document.getElementById("custPhone").value;
+            const city = document.getElementById("custCity").value;
+            const qty = parseInt(document.getElementById("custQty").value);
+            const address = document.getElementById("custAddress").value;
+            const total = (unitPrice * qty) + deliveryCharges;
+
+            const message = 
+`*نیا آرڈر - Smart Shopping PK* 🛍️
+---------------------------
+*پروڈکٹ:* ${selectedProduct}
+*تعداد:* ${qty}
+*کل رقم (مع ڈیلیوری):* Rs. ${total}
+---------------------------
+*کسٹمر کا نام:* ${name}
+*فون نمبر:* ${phone}
+*شہر:* ${city}
+*مکمل پتہ:* ${address}
+---------------------------
+براہ کرم میرا آرڈر کنفرم کر دیں!`;
+
+            const url = `https://wa.me/${storeWhatsApp}?text=${encodeURIComponent(message)}`;
+            window.open(url, "_blank");
+            closeModal();
+        }
+
+        function searchProducts() {
+            const input = document.getElementById("searchInput").value.toLowerCase();
+            const cards = document.getElementsByClassName("product-card");
+            for (let i = 0; i < cards.length; i++) {
+                const name = cards[i].getAttribute("data-name").toLowerCase();
+                cards[i].style.display = name.includes(input) ? "flex" : "none";
+            }
+        }
+    </script>
+
+</body>
+</html>
